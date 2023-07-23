@@ -1,0 +1,58 @@
+// SPDX-License-Identifier: MIT
+This is a comment to indicate the license under which the code is published. SPDX-License-Identifier is a standardized way of specifying the license for the code.
+solidity
+Copy code
+pragma solidity 0.8.18;
+This specifies the version of the Solidity compiler to be used (0.8.18 in this case). Solidity is the programming language used for writing smart contracts on the Ethereum blockchain.
+solidity
+Copy code
+import {SimpleStorage} from "./SimpleStorage.sol";
+This line imports the SimpleStorage contract from the file SimpleStorage.sol. It allows the StorageFactory contract to interact with the SimpleStorage contract.
+solidity
+Copy code
+contract StorageFactory {
+This line starts the declaration of a new contract called StorageFactory. A contract in Solidity is similar to a class in object-oriented programming.
+solidity
+Copy code
+    SimpleStorage[] public listOfSimpleStorage;
+This line declares a public dynamic array of type SimpleStorage. It will store instances of the SimpleStorage contract that will be created later.
+solidity
+Copy code
+    function createSimpleStorgaeContract() public {
+This line declares a function named createSimpleStorgaeContract, which is publicly accessible (the public keyword). This function is used to create a new instance of the SimpleStorage contract.
+solidity
+Copy code
+        SimpleStorage newSimpleStorageContract = new SimpleStorage();
+This line creates a new instance of the SimpleStorage contract and assigns it to the variable newSimpleStorageContract. It effectively deploys a new instance of the SimpleStorage contract on the blockchain.
+solidity
+Copy code
+        listOfSimpleStorage.push(newSimpleStorageContract);
+This line adds the newly created SimpleStorage contract instance to the listOfSimpleStorage array, so it can be accessed later.
+solidity
+Copy code
+    function sfStore(uint _simpleStorageIndex, uint _newSimpleStorageNumber) public {
+This line declares a function named sfStore, which is publicly accessible. It is used to store a value in a specific SimpleStorage contract instance.
+solidity
+Copy code
+        SimpleStorage mySimpleStorage = listOfSimpleStorage[_simpleStorageIndex];
+This line declares a variable mySimpleStorage of type SimpleStorage and assigns it the value of a specific SimpleStorage contract instance from the listOfSimpleStorage array. The contract instance is selected using the _simpleStorageIndex parameter.
+solidity
+Copy code
+        mySimpleStorage.store(_newSimpleStorageNumber);
+This line calls the store function of the selected SimpleStorage contract instance and passes _newSimpleStorageNumber as an argument. This will store the provided number in the SimpleStorage contract.
+solidity
+Copy code
+    function sfGet(uint _simpleStorageIndex) public view returns (uint256) {
+This line declares a function named sfGet, which is publicly accessible. It is used to retrieve a value from a specific SimpleStorage contract instance.
+solidity
+Copy code
+        SimpleStorage mySimpleStorage = listOfSimpleStorage[_simpleStorageIndex];
+This line declares a variable mySimpleStorage of type SimpleStorage and assigns it the value of a specific SimpleStorage contract instance from the listOfSimpleStorage array. The contract instance is selected using the _simpleStorageIndex parameter.
+solidity
+Copy code
+        return mySimpleStorage.retrieve();
+This line returns the result of calling the retrieve function of the selected SimpleStorage contract instance. It will fetch and return the stored value from the SimpleStorage contract.
+solidity
+Copy code
+}
+This line marks the end of the StorageFactory contract. The contract includes functions to create new SimpleStorage contracts and interact with them by storing and retrieving values.
