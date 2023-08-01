@@ -10,24 +10,30 @@ pragma solidity ^0.8.18;
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 //IMPORTING FROM GITHUB 
 
+error NotOwner();
+
 contract FundMe{
 
 
-    uint256 public miniumUSD = 5 * 1e18 ;
+    uint256 public constant MINIMUM_USD = 5 * 1e18 ;
+    //with constant gas = 374
+    //without constant gas = 2474
 
     address[] public funders;
     //to keep track who is sending us money
 
     mapping (address funder => uint256 amountFunded) public addressToAmountFunded;
 
-    address public owner;
+    address public immutable owner;
+    //with immutable gas = 378
+    //without immutable gas = 2514
 
     constructor() {
         owner = msg.sender;
     }
 
     function fund() public payable{
-        require(getConversionRate(msg.value) >= miniumUSD);
+        require(getConversionRate(msg.value) >= MINIMUM_USD);
 
         funders.push(msg.sender);
         //pushing all the address to funder array to keep the track
@@ -90,7 +96,23 @@ contract FundMe{
     
   
     modifier onlyOwner(){
-        require(msg.sender == owner, "sender is not owner");
+        //require(msg.sender == owner, "sender is not owner"); it cost gas so to make it gas sufficient we use error 
+        if(msg.sender != owner){
+            revert NotOwner();
+        }
         _;
     }
+
+
+    // What happens if someone send this contrcat ETH with calling FundMe
+
+    receive() external payable{
+        fund();
+    }
+    //gets triggered where their is no calldata (msg.data is empty) 
+
+    fallback() external payable{
+        fund();
+    }
+    //gets triggered where their is calldata (msg.data is has data)
 }
